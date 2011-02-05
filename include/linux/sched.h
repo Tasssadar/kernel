@@ -1591,6 +1591,7 @@ static inline int iso_task(struct task_struct *p)
 {
 	return (p->policy == SCHED_ISO);
 }
+extern int above_background_load(void);
 #else
 extern int runqueue_is_locked(int cpu);
 extern void task_rq_unlock_wait(struct task_struct *p);
@@ -1619,6 +1620,11 @@ static inline void print_scheduler_version(void)
 static inline int iso_task(struct task_struct *p)
 {
 	return 0;
+}
+/* Anyone feel like implementing this? */
+static inline int above_background_load(void)
+{
+  return 1;
 }
 #endif
 
