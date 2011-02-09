@@ -6864,7 +6864,6 @@ cputime_t task_stime(struct task_struct *p)
  */
 void thread_group_times(struct task_struct *p, cputime_t *ut, cputime_t *st)
 {
-	struct signal_struct *sig = p->signal;
 	struct task_cputime cputime;
 	cputime_t rtime, utime, total;
 
@@ -6882,12 +6881,12 @@ void thread_group_times(struct task_struct *p, cputime_t *ut, cputime_t *st)
 	} else
 		utime = rtime;
 
-	sig->prev_utime = max(sig->prev_utime, utime);
-	sig->prev_stime = max(sig->prev_stime,
-			      cputime_sub(rtime, sig->prev_utime));
+	p->prev_utime = max(p->prev_utime, utime);
+	p->prev_stime = max(p->prev_stime,
+			      cputime_sub(rtime, p->prev_utime));
 
-	*ut = sig->prev_utime;
-	*st = sig->prev_stime;
+	*ut = p->prev_utime;
+	*st = p->prev_stime;
 }
 #endif
 
