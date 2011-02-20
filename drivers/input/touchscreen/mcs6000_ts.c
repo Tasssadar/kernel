@@ -139,6 +139,10 @@ static void mcs6000_work_ng(struct work_struct *work)
 {
   static int x1=0, y1 = 0;
   static int x2=0, y2 = 0;
+  static int flipy=0;
+  static int flipx=0;
+  static int canFlipX=1;
+  static int canFlipY=1;
   unsigned int input_type;
   unsigned char read_buf[READ_NUM];
 
@@ -176,7 +180,56 @@ static void mcs6000_work_ng(struct work_struct *work)
 			// read first pair of coordinates (single touch)
 			x1 = (((read_buf[1] & 0xf0) << 4) | read_buf[2]);
 			y1 = (((read_buf[1] & 0x0f) << 8) | read_buf[3]);
+			// if it's multi touch, read the other coordinates and try workaround for axis inversion
+			if(input_type == MULTI_POINT_TOUCH)
+			{
+				// read second pair of coordinates (multi touch)
+				x2 = (((read_buf[5] & 0xf0) << 4) | read_buf[6]);
+				y2 = (((read_buf[5] & 0x0f) << 8) | read_buf[7]);
+				
+				// save currenct distances as last distances
+				//lastDistY = abs(y1-y2);
+				//lastDistX = abs(x1-x2);
+				
+				// checking distance and flip flags
+				if ( (canFlipX) && (abs(y1-y2)<= 40) )
+				{
+					// set flip flag
+					flipx=!flipx;
+					// stop calculation until points drive away from each other
+					canFlipX=0;
+				}
+				if ( (canFlipY) && (abs(x1-x2) <= 40) )
+				{
+					// set flip flag
+					flipy=!flipy;
+					// stop calculation until points drive away from each other
+					canFlipY=0;
+				}
+				
+				// actual flip of points
+				// this is done during the whole inversion, on each sampling coords must be flipped
+				if(flipx)
+					swap(x1,x2);
+				if(flipy)
+					swap(y1,y2);
 
+				// when points drive away from each other, reactivate the checks
+				if (abs(y1-y2) > 40)
+				{
+					canFlipX = 1;
+				}
+				if (abs(x1-x2) > 40)
+				{
+					canFlipY = 1; 
+				}
+			}
+			else
+			{
+				// single touch -> reset flags check on axis inversion workaround
+				canFlipY = canFlipX = 1;
+				flipx = flipy = 0;
+			}
 			input_report_abs(dev->input_dev, ABS_MT_TOUCH_MAJOR, read_buf[4]);
 			input_report_abs(dev->input_dev, ABS_MT_POSITION_X, x1);
 			input_report_abs(dev->input_dev, ABS_MT_POSITION_Y, y1);
@@ -185,9 +238,6 @@ static void mcs6000_work_ng(struct work_struct *work)
 			// if it's multi touch, read the other coordinates and try workaround for axis inversion
 			if(input_type == MULTI_POINT_TOUCH)
 			{
-				// read second pair of coordinates (multi touch)
-				x2 = (((read_buf[5] & 0xf0) << 4) | read_buf[6]);
-				y2 = (((read_buf[5] & 0x0f) << 8) | read_buf[7]);
 				input_report_abs(dev->input_dev, ABS_MT_TOUCH_MAJOR, read_buf[4]);
 				input_report_abs(dev->input_dev, ABS_MT_POSITION_X, x2);
 				input_report_abs(dev->input_dev, ABS_MT_POSITION_Y, y2);
@@ -200,7 +250,10 @@ static void mcs6000_work_ng(struct work_struct *work)
   }
   else   /* touch released case */
     {
-	// no touch -> reset flags check on axis inversion workaround
+      // no touch -> reset flags check on axis inversion workaround
+      canFlipY = canFlipX = 1;
+      flipx = flipy = 0;
+      // no touch -> reset flags check on axis inversion workaround
       if(touch_pressed)
         {
           input_mt_sync(dev->input_dev);
