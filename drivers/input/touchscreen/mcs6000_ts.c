@@ -963,4 +963,3 @@ module_exit(mcs6000_ts_exit);
 
 MODULE_DESCRIPTION("MELFAS MCS6000 Touchscreen Driver");
 MODULE_LICENSE("GPL");
-
