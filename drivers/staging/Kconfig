@@ -24,6 +24,8 @@ menuconfig STAGING
 
 if STAGING
 
+source "drivers/staging/zram/Kconfig"
+
 config STAGING_EXCLUDE_BUILD
 	bool "Exclude Staging drivers from being built" if STAGING
 	default y
