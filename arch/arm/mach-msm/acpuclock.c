@@ -245,6 +245,36 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_1200[] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
 };
 
+/* 7x27 normal with GSM capable modem - PLL0 and PLL1 swapped and pll2 @ 800 */
+static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_800[] =
+{
+    { 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 30720 },
+    { 0, 120000, ACPU_PLL_0, 4, 7,  60000, 1, 3,  61440 },
+    { 1, 122880, ACPU_PLL_1, 1, 1,  61440, 1, 3,  61440 },
+    { 0, 200000, ACPU_PLL_2, 2, 3,  66667, 2, 4,  61440 },
+    { 1, 245760, ACPU_PLL_1, 1, 0, 122880, 1, 4,  61440 },
+    { 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 122880 },
+    { 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 122880 },
+    { 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
+    { 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 122880 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0} }
+};
+
+/* 7x27 normal with CDMA-only modem - PLL0 and PLL1 swapped and pll2 @ 800 */
+static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_800[] =
+{
+    { 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 24576 },
+    { 1,  98304, ACPU_PLL_1, 1, 1,  98304, 0, 3,  49152 },
+    { 0, 120000, ACPU_PLL_0, 4, 7,  60000, 1, 3,  49152 },
+    { 1, 196608, ACPU_PLL_1, 1, 0,  65536, 2, 4,  98304 },
+    { 0, 200000, ACPU_PLL_2, 2, 3,  66667, 2, 4,  98304 },
+    { 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 120000 },
+    { 0, 400000, ACPU_PLL_2, 2, 1, 133333, 2, 5, 120000 },
+    { 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 120000 },
+    { 1, 800000, ACPU_PLL_2, 2, 0, 200000, 3, 7, 120000 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0}, {0, 0, 0}}
+};
+
 /* 7x27 normal with CDMA-only modem - PLL0 and PLL1 swapped */
 static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_1200[] = {
 	{ 0, 19200, ACPU_PLL_TCXO, 0, 0, 19200, 0, 0, 24576 },
@@ -263,6 +293,7 @@ static struct clkctl_acpu_speed pll0_960_pll1_196_pll2_1200[] = {
 #define PLL_245_MHZ	12
 #define PLL_491_MHZ	25
 #define PLL_768_MHZ	40
+#define PLL_800_MHZ	41
 #define PLL_960_MHZ	50
 #define PLL_1056_MHZ	55
 #define PLL_1200_MHZ	62
