@@ -216,6 +216,12 @@ config CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER
 	Sampling latency rate multiplied by the cpu switch latency.
 	Affects governor polling.
 
+config CPU_FREQ_GOV_INTERACTIVEX
+	tristate "'interactiveX' cpufreq policy governor"
+	help
+	  'interactiveX' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
 	depends on CPU_FREQ
