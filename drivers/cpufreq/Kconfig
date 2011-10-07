@@ -228,6 +228,12 @@ config CPU_FREQ_GOV_SAVAGEDZEN
 	  'savagedzen' - This driver adds a dynamic cpufreq policy governor
 	  designed for latency-sensitive workloads.
 
+config CPU_FREQ_GOV_SMOOTHASS
+	tristate "'smoothass' cpufreq policy governor"
+	help
+	  'smoothass' - This driver adds a dynamic cpufreq policy governor
+	  designed for latency-sensitive workloads.
+
 config CPU_FREQ_GOV_CONSERVATIVE
 	tristate "'conservative' cpufreq governor"
 	depends on CPU_FREQ
