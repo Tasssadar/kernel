@@ -2737,7 +2737,7 @@ need_resched:
 need_resched_nonpreemptible:
 
 	deactivate = 0;
-	schedule_debug(prev);
+	//schedule_debug(prev);
 
 	grq_lock_irq();
 	update_clocks(rq);
