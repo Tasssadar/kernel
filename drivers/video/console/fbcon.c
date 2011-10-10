@@ -1891,12 +1891,13 @@ static int fbcon_scroll(struct vc_data *vc, int t, int b, int dir,
 			break;
 
 		case SCROLL_PAN_MOVE:
-			if ((p->yscroll + count <=
+			/*if ((p->yscroll + count <=
 			     2 * (p->vrows - vc->vc_rows))
 			    && ((!scroll_partial && (b - t == vc->vc_rows))
 				|| (scroll_partial
 				    && (b - t - count >
-					3 * vc->vc_rows >> 2)))) {
+					3 * vc->vc_rows >> 2))))
+			{*/
 				if (t > 0)
 					fbcon_bmove(vc, 0, 0, count, 0, t,
 						    vc->vc_cols);
@@ -1905,11 +1906,12 @@ static int fbcon_scroll(struct vc_data *vc, int t, int b, int dir,
 					fbcon_bmove(vc, b - count, 0, b, 0,
 						    vc->vc_rows - b,
 						    vc->vc_cols);
-			} else if (info->flags & FBINFO_READS_FAST)
+			/*}
+			else if (info->flags & FBINFO_READS_FAST)
 				fbcon_bmove(vc, t + count, 0, t, 0,
 					    b - t - count, vc->vc_cols);
 			else
-				goto redraw_up;
+				goto redraw_up;*/
 			fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
 			break;
 
@@ -1964,11 +1966,12 @@ static int fbcon_scroll(struct vc_data *vc, int t, int b, int dir,
 			break;
 
 		case SCROLL_PAN_MOVE:
-			if ((count - p->yscroll <= p->vrows - vc->vc_rows)
+			/*if ((count - p->yscroll <= p->vrows - vc->vc_rows)
 			    && ((!scroll_partial && (b - t == vc->vc_rows))
 				|| (scroll_partial
 				    && (b - t - count >
-					3 * vc->vc_rows >> 2)))) {
+					3 * vc->vc_rows >> 2)))) 
+			{*/
 				if (vc->vc_rows - b > 0)
 					fbcon_bmove(vc, b, 0, b - count, 0,
 						    vc->vc_rows - b,
@@ -1977,11 +1980,12 @@ static int fbcon_scroll(struct vc_data *vc, int t, int b, int dir,
 				if (t > 0)
 					fbcon_bmove(vc, count, 0, 0, 0, t,
 						    vc->vc_cols);
-			} else if (info->flags & FBINFO_READS_FAST)
+			/*}
+			else if (info->flags & FBINFO_READS_FAST)
 				fbcon_bmove(vc, t, 0, t + count, 0,
 					    b - t - count, vc->vc_cols);
 			else
-				goto redraw_down;
+				goto redraw_down;*/
 			fbcon_clear(vc, t, 0, count, vc->vc_cols);
 			break;
 
