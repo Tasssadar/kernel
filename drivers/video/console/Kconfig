@@ -121,6 +121,12 @@ config FRAMEBUFFER_CONSOLE_ROTATION
          such that other users of the framebuffer will remain normally
          oriented.
 
+config FB_SLOW_SCROLL_HACK
+        bool "Framebuffer Console Hack for fast scrolling"
+        depends on FRAMEBUFFER_CONSOLE && LOGO && !FRAMEBUFFER_CONSOLE_ROTATION
+        help
+         Hacks framebuffer console scrolling code to be faster
+
 config STI_CONSOLE
         bool "STI text console"
         depends on PARISC
