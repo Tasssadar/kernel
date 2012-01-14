@@ -17,7 +17,7 @@
  *
  */
 
-//#define OVERCLOCK_AHB
+#define OVERCLOCK_AHB
 
 #include <linux/version.h>
 #include <linux/kernel.h>
