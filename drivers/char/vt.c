@@ -341,6 +341,7 @@ static void scrdown(struct vc_data *vc, unsigned int t, unsigned int b, int nr)
 /*LGE_CHANGE_S [blue.park@lge.com] 2010-04-01, Make a New API for Error Handler > */
 void display_errorinfo_byLGE(int crash_side, unsigned short * buf, int count)
 {
+    /*
 	extern void expand_char_to_shrt(char * message,unsigned short *buffer);
 	extern int msm_fb_refesh_enabled;
 	struct vc_data *vc;
@@ -367,7 +368,7 @@ void display_errorinfo_byLGE(int crash_side, unsigned short * buf, int count)
 		}
 
 	fbcon_update_byLGE(vc);
-	msm_fb_refesh_enabled = 0;	// Block another Refresh
+	msm_fb_refesh_enabled = 0;	// Block another Refresh */
 
 }
 /*LGE_CHANGE_E [blue.park@lge.com] 2010-04-01, Make a New API for Error Handler > */
