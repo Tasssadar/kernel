@@ -211,7 +211,7 @@ static struct clkctl_acpu_speed pll0_960_pll1_245_pll2_1200[] = {
 	{ 1, 320000, ACPU_PLL_0, 4, 2, 160000, 1, 5, 122880 },
 	{ 0, 400000, ACPU_PLL_2, 2, 2, 133333, 2, 5, 122880 },
 	{ 1, 480000, ACPU_PLL_0, 4, 1, 160000, 2, 6, 122880 },
-	{ 1, 600000, ACPU_PLL_2, 2, 1, 200000, 2, 7, 200000 },
+	{ 1, 600000, ACPU_PLL_2, 2, 1, 200000, 2, 7, 122880 },
 #ifndef OVERCLOCK_AHB
 /* Conservative AHB overclocking */
 	{ 1, 652800, ACPU_PLL_0, 4, 0, 217600, 2, 7, 200000 },
@@ -484,16 +484,6 @@ a11_div = hunt_s->a11clk_src_div;
     udelay(50);
   }
 #endif
- 
-	/*
-	 * If the new clock divider is higher than the previous, then
-	 * program the divider before switching the clock
-	 */
-	if (hunt_s->ahbclk_div > clk_div) {
-		reg_clksel &= ~(0x3 << 1);
-		reg_clksel |= (hunt_s->ahbclk_div << 1);
-		writel(reg_clksel, A11S_CLK_SEL_ADDR);
-	}
 
 	// Perform overclocking if requested
 	if(hunt_s->pll==0 && hunt_s->a11clk_khz>600000) {
@@ -510,6 +500,16 @@ a11_div = hunt_s->a11clk_src_div;
 	}
 #endif
 
+	/*
+	 * If the new clock divider is higher than the previous, then
+	 * program the divider before switching the clock
+	 */
+	if (hunt_s->ahbclk_div > clk_div) {
+		reg_clksel &= ~(0x3 << 1);
+		reg_clksel |= (hunt_s->ahbclk_div << 1);
+		writel(reg_clksel, A11S_CLK_SEL_ADDR);
+	}
+
 	/* Program clock source and divider */
 	reg_clkctl = readl(A11S_CLK_CNTL_ADDR);
 	reg_clkctl &= ~(0xFF << (8 * src_sel));
@@ -522,11 +522,11 @@ a11_div = hunt_s->a11clk_src_div;
 	writel(reg_clksel, A11S_CLK_SEL_ADDR);
 
 	// Recover from overclocking
-	if(hunt_s->pll==0 && hunt_s->a11clk_khz<=600000) {
+/*	if(hunt_s->pll==0 && hunt_s->a11clk_khz<=600000) {
 		// Restore the speed of PLL0
 		writel(50, PLLn_L_VAL(0));
 		udelay(50);
-	}
+	}*/
 
 	/*
 	 * If the new clock divider is lower than the previous, then
