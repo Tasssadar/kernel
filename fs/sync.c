@@ -157,7 +157,7 @@ void emergency_sync(void)
 		schedule_work(work);
 	}
 }
-
+#ifndef CONFIG_FILE_SYNC_DISABLE
 /*
  * Generic function to fsync a file.
  *
@@ -242,7 +242,7 @@ out:
 	return ret;
 }
 EXPORT_SYMBOL(vfs_fsync_range);
-
+#endif /* #ifndef CONFIG_FILE_SYNC_DISABLE */
 /**
  * vfs_fsync - perform a fsync or fdatasync on a file
  * @file:		file to sync
@@ -262,6 +262,13 @@ int vfs_fsync(struct file *file, struct dentry *dentry, int datasync)
 }
 EXPORT_SYMBOL(vfs_fsync);
 
+
+#ifdef CONFIG_FILE_SYNC_DISABLE
+static inline int do_fsync(unsigned int fd, int datasync)
+{
+  	return 0;
+}
+#else /* !CONFIG_FILE_SYNC_DISABLE */
 static int do_fsync(unsigned int fd, int datasync)
 {
 	struct file *file;
@@ -274,7 +281,7 @@ static int do_fsync(unsigned int fd, int datasync)
 	}
 	return ret;
 }
-
+#endif /* !CONFIG_FILE_SYNC_DISABLE */
 SYSCALL_DEFINE1(fsync, unsigned int, fd)
 {
 	return do_fsync(fd, 0);
@@ -301,6 +308,14 @@ int generic_write_sync(struct file *file, loff_t pos, loff_t count)
 			       pos + count - 1, 1);
 }
 EXPORT_SYMBOL(generic_write_sync);
+
+#ifdef CONFIG_FILE_SYNC_DISABLE
+SYSCALL_DEFINE(sync_file_range)(int fd, loff_t offset, loff_t nbytes,
+        unsigned int flags)
+{
+  return 0;
+}
+#else /* !CONFIG_FILE_SYNC_DISABLE */
 
 /*
  * sys_sync_file_range() permits finely controlled syncing over a segment of
@@ -410,6 +425,8 @@ out_put:
 out:
 	return ret;
 }
+#endif /* !CONFIG_FILE_SYNC_DISABLE */
+
 #ifdef CONFIG_HAVE_SYSCALL_WRAPPERS
 asmlinkage long SyS_sync_file_range(long fd, loff_t offset, loff_t nbytes,
 				    long flags)
